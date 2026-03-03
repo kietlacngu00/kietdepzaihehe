@@ -1,0 +1,488 @@
+--[[
+    ╔══════════════════════════════════════════════════════════╗
+    ║     ONE BY CHAT - TURBO EDITION                         ║
+    ║     ☠️  TÁC GIẢ: KIETDEPZAI  ☠️                          ║
+    ║     🎨  GIAO DIỆN 13 TAB (DẠNG DỌC)                    ║
+    ║     📋  INFO • FARMING • STACK • MASTERY               ║
+    ║     🌊  SEA EVENT • V4 • DOJO • ITEMS                  ║
+    ║     🍎  RAID • PLAYER • SHOP • STATS • TELEPORT        ║
+    ║     📅  CẬP NHẬT: 2026                                  ║
+    ╚══════════════════════════════════════════════════════════╝
+--]]
+
+-- KIỂM TRA VÀ XÓA GUI CŨ
+pcall(function()
+    game.CoreGui:FindFirstChild("OneByChat"):Destroy()
+end)
+
+-- KIỂM TRA THIẾT BỊ
+local UserInputService = game:GetService("UserInputService")
+local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+local deviceType = isMobile and "📱 MOBILE" or "💻 PC"
+
+-- KÍCH THƯỚC MENU (2/3 màn hình)
+local screenSize = workspace.CurrentCamera.ViewportSize
+local menuWidth = screenSize.X * 0.7
+local menuHeight = screenSize.Y * 0.75
+local menuX = (screenSize.X - menuWidth) / 2
+local menuY = (screenSize.Y - menuHeight) / 2
+
+-- TẠO GUI CHÍNH
+local OneByChat = Instance.new("ScreenGui")
+OneByChat.Name = "OneByChat"
+OneByChat.Parent = game:GetService("CoreGui")
+OneByChat.ResetOnSpawn = false
+OneByChat.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- FRAME CHÍNH (nền đen)
+local MainFrame = Instance.new("Frame")
+MainFrame.Parent = OneByChat
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.BackgroundTransparency = 0.1
+MainFrame.BorderSizePixel = 0
+MainFrame.Size = UDim2.new(0, menuWidth, 0, menuHeight)
+MainFrame.Position = UDim2.new(0, menuX, 0, menuY)
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.ClipsDescendants = true
+
+-- VIỀN SÁNG
+local Border = Instance.new("Frame")
+Border.Parent = MainFrame
+Border.Size = UDim2.new(1, 4, 1, 4)
+Border.Position = UDim2.new(-0.005, 0, -0.005, 0)
+Border.BackgroundColor3 = Color3.fromRGB(0, 255, 128)
+Border.BackgroundTransparency = 0.7
+Border.BorderSizePixel = 0
+
+-- THANH TIÊU ĐỀ
+local TitleBar = Instance.new("Frame")
+TitleBar.Parent = MainFrame
+TitleBar.Size = UDim2.new(1, 0, 0, 40)
+TitleBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+TitleBar.BorderSizePixel = 0
+
+local Title = Instance.new("TextLabel")
+Title.Parent = TitleBar
+Title.Size = UDim2.new(1, -80, 1, 0)
+Title.Position = UDim2.new(0, 15, 0, 0)
+Title.Text = "☠️ ONE BY CHAT - TURBO EDITION ☠️"
+Title.TextColor3 = Color3.fromRGB(0, 255, 128)
+Title.TextScaled = true
+Title.Font = Enum.Font.GothamBold
+Title.BackgroundTransparency = 1
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- NÚT THU GỌN
+local MinimizeBtn = Instance.new("TextButton")
+MinimizeBtn.Parent = TitleBar
+MinimizeBtn.Size = UDim2.new(0, 35, 0, 35)
+MinimizeBtn.Position = UDim2.new(1, -80, 0, 2.5)
+MinimizeBtn.Text = "−"
+MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeBtn.TextSize = 25
+MinimizeBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MinimizeBtn.BorderSizePixel = 0
+MinimizeBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
+
+-- NÚT ĐÓNG
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Parent = TitleBar
+CloseBtn.Size = UDim2.new(0, 35, 0, 35)
+CloseBtn.Position = UDim2.new(1, -40, 0, 2.5)
+CloseBtn.Text = "✕"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.TextSize = 20
+CloseBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+CloseBtn.BorderSizePixel = 0
+CloseBtn.MouseButton1Click:Connect(function()
+    OneByChat:Destroy()
+end)
+
+-- ===========================================
+-- NÚT AVATAR BÊN TRÁI
+-- ===========================================
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Parent = OneByChat
+ToggleButton.Size = UDim2.new(0, 55, 0, 55)
+ToggleButton.Position = UDim2.new(0, 15, 0.5, -27.5)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+ToggleButton.BackgroundTransparency = 0.1
+ToggleButton.BorderSizePixel = 2
+ToggleButton.BorderColor3 = Color3.fromRGB(0, 255, 128)
+ToggleButton.Text = "ON"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextSize = 16
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.Draggable = true
+
+-- Bo tròn
+local UICorner = Instance.new("UICorner")
+UICorner.Parent = ToggleButton
+UICorner.CornerRadius = UDim.new(1, 0)
+
+-- Đèn báo trạng thái
+local StatusLight = Instance.new("Frame")
+StatusLight.Parent = ToggleButton
+StatusLight.Size = UDim2.new(0, 12, 0, 12)
+StatusLight.Position = UDim2.new(1, -17, 0, 5)
+StatusLight.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+StatusLight.BorderSizePixel = 0
+local LightCorner = Instance.new("UICorner")
+LightCorner.Parent = StatusLight
+LightCorner.CornerRadius = UDim.new(1, 0)
+
+-- Xử lý bật/tắt menu
+ToggleButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+    if MainFrame.Visible then
+        ToggleButton.Text = "OFF"
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+        StatusLight.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    else
+        ToggleButton.Text = "ON"
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+        StatusLight.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    end
+end)
+
+-- Hiệu ứng hover
+ToggleButton.MouseEnter:Connect(function()
+    ToggleButton.Size = UDim2.new(0, 60, 0, 60)
+end)
+ToggleButton.MouseLeave:Connect(function()
+    ToggleButton.Size = UDim2.new(0, 55, 0, 55)
+end)
+
+ToggleButton.ZIndex = 10
+MainFrame.ZIndex = 5
+
+-- ===========================================
+-- THANH TAB DỌC (BÊN TRÁI)
+-- ===========================================
+local TabPanel = Instance.new("Frame")
+TabPanel.Parent = MainFrame
+TabPanel.Size = UDim2.new(0, 200, 1, -50)
+TabPanel.Position = UDim2.new(0, 10, 0, 45)
+TabPanel.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+TabPanel.BorderSizePixel = 0
+
+local TabList = Instance.new("ScrollingFrame")
+TabList.Parent = TabPanel
+TabList.Size = UDim2.new(1, -5, 1, -5)
+TabList.Position = UDim2.new(0, 2, 0, 2)
+TabList.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+TabList.BorderSizePixel = 0
+TabList.ScrollBarThickness = 4
+TabList.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 128)
+
+-- Danh sách 13 tab
+local tabs = {
+    "📋 Info & Server",
+    "🌾 Tab Farming",
+    "📦 Stack Farm",
+    "⚔️ Farm Mastery",
+    "🌊 Sea Event",
+    "⬆️ Upgrade V4",
+    "🐉 Dojo & Drago Race",
+    "🎁 Get Item & Upgrade",
+    "🍎 Raid & Fruit",
+    "👤 Local Player",
+    "🏪 Local Shop",
+    "📊 Stats & ESP",
+    "🌐 Tab Teleport"
+}
+
+local tabButtons = {}
+local currentTab = 1
+
+-- ===========================================
+-- KHU VỰC NỘI DUNG (BÊN PHẢI)
+-- ===========================================
+local ContentPanel = Instance.new("Frame")
+ContentPanel.Parent = MainFrame
+ContentPanel.Size = UDim2.new(1, -230, 1, -50)
+ContentPanel.Position = UDim2.new(0, 220, 0, 45)
+ContentPanel.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+ContentPanel.BorderSizePixel = 0
+
+local ContentFrame = Instance.new("ScrollingFrame")
+ContentFrame.Parent = ContentPanel
+ContentFrame.Size = UDim2.new(1, -10, 1, -10)
+ContentFrame.Position = UDim2.new(0, 5, 0, 5)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+ContentFrame.BackgroundTransparency = 0.5
+ContentFrame.BorderSizePixel = 0
+ContentFrame.ScrollBarThickness = 6
+ContentFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 128)
+ContentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+ContentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+-- ===========================================
+-- HÀM TẠO UI
+-- ===========================================
+local function ClearContent()
+    for _, v in pairs(ContentFrame:GetChildren()) do
+        v:Destroy()
+    end
+end
+
+local function CreateToggle(parent, name, desc, yPos, default)
+    local frame = Instance.new("Frame")
+    frame.Parent = parent
+    frame.Size = UDim2.new(1, -10, 0, 60)
+    frame.Position = UDim2.new(0, 5, 0, yPos)
+    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    frame.BorderSizePixel = 0
+
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Parent = frame
+    nameLabel.Size = UDim2.new(1, -80, 0, 25)
+    nameLabel.Position = UDim2.new(0, 10, 0, 5)
+    nameLabel.Text = name
+    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    nameLabel.TextScaled = true
+    nameLabel.Font = Enum.Font.GothamSemibold
+    nameLabel.BackgroundTransparency = 1
+
+    local descLabel = Instance.new("TextLabel")
+    descLabel.Parent = frame
+    descLabel.Size = UDim2.new(1, -80, 0, 20)
+    descLabel.Position = UDim2.new(0, 10, 0, 30)
+    descLabel.Text = desc
+    descLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.TextScaled = true
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.BackgroundTransparency = 1
+
+    local toggle = Instance.new("TextButton")
+    toggle.Parent = frame
+    toggle.Size = UDim2.new(0, 50, 0, 25)
+    toggle.Position = UDim2.new(1, -60, 0, 17.5)
+    toggle.Text = default and "ON" or "OFF"
+    toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggle.TextSize = 14
+    toggle.BackgroundColor3 = default and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(150, 0, 0)
+    toggle.BorderSizePixel = 0
+
+    return frame, toggle
+end
+
+local function CreateButton(parent, name, yPos, color)
+    local btn = Instance.new("TextButton")
+    btn.Parent = parent
+    btn.Size = UDim2.new(1, -10, 0, 40)
+    btn.Position = UDim2.new(0, 5, 0, yPos)
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextSize = 16
+    btn.BackgroundColor3 = color or Color3.fromRGB(0, 100, 150)
+    btn.BorderSizePixel = 0
+    return btn
+end
+
+local function CreateInput(parent, name, placeholder, yPos)
+    local frame = Instance.new("Frame")
+    frame.Parent = parent
+    frame.Size = UDim2.new(1, -10, 0, 70)
+    frame.Position = UDim2.new(0, 5, 0, yPos)
+    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    frame.BorderSizePixel = 0
+
+    local label = Instance.new("TextLabel")
+    label.Parent = frame
+    label.Size = UDim2.new(1, -20, 0, 25)
+    label.Position = UDim2.new(0, 10, 0, 5)
+    label.Text = name
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextScaled = true
+    label.Font = Enum.Font.Gotham
+    label.BackgroundTransparency = 1
+
+    local input = Instance.new("TextBox")
+    input.Parent = frame
+    input.Size = UDim2.new(1, -20, 0, 30)
+    input.Position = UDim2.new(0, 10, 0, 35)
+    input.PlaceholderText = placeholder
+    input.Text = ""
+    input.TextColor3 = Color3.fromRGB(255, 255, 255)
+    input.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    input.BorderSizePixel = 0
+
+    return frame, input
+end
+
+local function CreateDropdown(parent, name, options, yPos)
+    local frame = Instance.new("Frame")
+    frame.Parent = parent
+    frame.Size = UDim2.new(1, -10, 0, 70)
+    frame.Position = UDim2.new(0, 5, 0, yPos)
+    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    frame.BorderSizePixel = 0
+
+    local label = Instance.new("TextLabel")
+    label.Parent = frame
+    label.Size = UDim2.new(1, -20, 0, 25)
+    label.Position = UDim2.new(0, 10, 0, 5)
+    label.Text = name
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextScaled = true
+    label.Font = Enum.Font.Gotham
+    label.BackgroundTransparency = 1
+
+    local btn = Instance.new("TextButton")
+    btn.Parent = frame
+    btn.Size = UDim2.new(1, -20, 0, 30)
+    btn.Position = UDim2.new(0, 10, 0, 35)
+    btn.Text = options[1]
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    btn.BorderSizePixel = 0
+
+    return frame, btn
+end
+
+-- ===========================================
+-- HÀM CẬP NHẬT NỘI DUNG THEO TAB
+-- ===========================================
+local function UpdateContent(tabIndex)
+    ClearContent()
+    local yPos = 0
+
+    if tabIndex == 1 then -- Info & Server
+        local toggle1, _ = CreateToggle(ContentFrame, "Mirage Island", "phát hiện đảo ảo", yPos, false)
+        yPos = yPos + 65
+        local toggle2, _ = CreateToggle(ContentFrame, "Kitsune Island", "phát hiện đảo kitsune", yPos, false)
+        yPos = yPos + 65
+        local toggle3, _ = CreateToggle(ContentFrame, "Prehistoric Island", "phát hiện đảo tiền sử", yPos, false)
+        yPos = yPos + 65
+        local toggle4, _ = CreateToggle(ContentFrame, "Frozen Dimension", "phát hiện không gian băng", yPos, false)
+        yPos = yPos + 65
+        local btn1 = CreateButton(ContentFrame, "Pull Lever", yPos, Color3.fromRGB(255, 150, 0))
+        yPos = yPos + 45
+        local btn2 = CreateButton(ContentFrame, "Full Moon", yPos, Color3.fromRGB(200, 200, 0))
+
+    elseif tabIndex == 2 then -- Tab Farming
+        local toggle1, _ = CreateToggle(ContentFrame, "Start Farm", "bắt đầu farm", yPos, false)
+        yPos = yPos + 65
+        local toggle2, _ = CreateToggle(ContentFrame, "Accept Quests", "tự động nhận nhiệm vụ", yPos, false)
+        yPos = yPos + 65
+        local toggle3, _ = CreateToggle(ContentFrame, "Auto Factory Raid", "tự động đánh nhà máy", yPos, false)
+        yPos = yPos + 65
+        local btn1 = CreateButton(ContentFrame, "Kill Mobs Nearest", yPos, Color3.fromRGB(200, 50, 50))
+        yPos = yPos + 45
+        local btn2 = CreateButton(ContentFrame, "Select Farm Mode", yPos, Color3.fromRGB(0, 150, 200))
+
+    elseif tabIndex == 3 then -- Stack Farm
+        local toggle1, _ = CreateToggle(ContentFrame, "Disable Notify", "tắt thông báo", yPos, false)
+        yPos = yPos + 65
+        local input1, _ = CreateInput(ContentFrame, "Bring Mobs Range", "độ xa gom quái", yPos)
+        yPos = yPos + 75
+        local input2, _ = CreateInput(ContentFrame, "Select Farm Height", "độ cao đứng trên đầu", yPos)
+        yPos = yPos + 75
+        local input3, _ = CreateInput(ContentFrame, "Tween Speed", "tốc độ di chuyển", yPos)
+        yPos = yPos + 75
+        local btn1 = CreateButton(ContentFrame, "Redeem All Codes", yPos, Color3.fromRGB(0, 200, 100))
+        yPos = yPos + 45
+        local btn2 = CreateButton(ContentFrame, "Set Pirate Team", yPos, Color3.fromRGB(200, 0, 0))
+
+    elseif tabIndex == 4 then -- Farm Mastery
+        local toggle1, _ = CreateToggle(ContentFrame, "Auto Farm 600 In Swords", "tự động farm 600 điểm kiếm", yPos, false)
+        yPos = yPos + 65
+        local btn1 = CreateButton(ContentFrame, "Auto Skull Guitar", yPos, Color3.fromRGB(150, 0, 150))
+        yPos = yPos + 45
+        local btn2 = CreateButton(ContentFrame, "Auto Yama CDK", yPos, Color3.fromRGB(0, 100, 200))
+        yPos = yPos + 45
+        local btn3 = CreateButton(ContentFrame, "Auto Tushita CDK", yPos, Color3.fromRGB(0, 150, 150))
+        yPos = yPos + 45
+        local btn4 = CreateButton(ContentFrame, "Auto Cursed Dual Katana", yPos, Color3.fromRGB(200, 0, 200))
+        yPos = yPos + 45
+        local btn5 = CreateButton(ContentFrame, "Auto Canvendish Sword", yPos, Color3.fromRGB(255, 100, 0))
+
+    elseif tabIndex == 5 then -- Sea Event
+        local toggle1, _ = CreateToggle(ContentFrame, "Auto Attack Sea Beast", "tự động đánh sea beast", yPos, false)
+        yPos = yPos + 65
+        local toggle2, _ = CreateToggle(ContentFrame, "Auto Attack Pirate GrandBrigade", "tự động tấn công thuyền cướp biển", yPos, false)
+        yPos = yPos + 65
+        local label = Instance.new("TextLabel")
+        label.Parent = ContentFrame
+        label.Size = UDim2.new(1, -10, 0, 30)
+        label.Position = UDim2.new(0, 5, 0, yPos)
+        label.Text = "Go to Sea 3 for more options"
+        label.TextColor3 = Color3.fromRGB(255, 255, 0)
+        label.TextScaled = true
+        label.Font = Enum.Font.Gotham
+        label.BackgroundTransparency = 1
+        yPos = yPos + 35
+
+    elseif tabIndex == 6 then -- Upgrade V4
+        local toggle1, _ = CreateToggle(ContentFrame, "Auto Mink V2/V3", "tự động nâng cấp tộc mink", yPos, false)
+        yPos = yPos + 65
+        local toggle2, _ = CreateToggle(ContentFrame, "Auto Human V2/V3", "tự động nâng cấp tộc human", yPos, false)
+        yPos = yPos + 65
+        local toggle3, _ = CreateToggle(ContentFrame, "Auto Angel V2/V3", "tự động nâng cấp tộc angel", yPos, false)
+        yPos = yPos + 65
+        local toggle4, _ = CreateToggle(ContentFrame, "Auto Shark V2/V3", "tự động nâng cấp tộc shark", yPos, false)
+        yPos = yPos + 65
+        local label = Instance.new("TextLabel")
+        label.Parent = ContentFrame
+        label.Size = UDim2.new(1, -10, 0, 30)
+        label.Position = UDim2.new(0, 5, 0, yPos)
+        label.Text = "Race upgrade v4 only in Sea 3"
+        label.TextColor3 = Color3.fromRGB(0, 255, 255)
+        label.TextScaled = true
+        label.Font = Enum.Font.Gotham
+        label.BackgroundTransparency = 1
+
+    elseif tabIndex == 7 then -- Dojo & Drago Race
+        local toggle1, _ = CreateToggle(ContentFrame, "Auto Dojo Trainer", "tự động làm nhiệm vụ đai dojo", yPos, false)
+        yPos = yPos + 65
+        local toggle2, _ = CreateToggle(ContentFrame, "Auto Dragon Hunter", "tự động farm blaze ember", yPos, false)
+        yPos = yPos + 65
+        local toggle3, _ = CreateToggle(ContentFrame, "Auto race draco (V1)", "tự động săn trứng rồng", yPos, false)
+        yPos = yPos + 65
+        local toggle4, _ = CreateToggle(ContentFrame, "Auto race draco (V2)", "tự động farm fireflower", yPos, false)
+        yPos = yPos + 65
+        local toggle5, _ = CreateToggle(ContentFrame, "Auto race draco (V3)", "tự động săn terror shark", yPos, false)
+        yPos = yPos + 65
+        local toggle6, _ = CreateToggle(ContentFrame, "Auto Relic Draco Trial", "tự động thử thách relic", yPos, false)
+        yPos = yPos + 65
+        local btn1 = CreateButton(ContentFrame, "Swap Draco Race", yPos, Color3.fromRGB(150, 0, 255))
+        yPos = yPos + 45
+        local btn2 = CreateButton(ContentFrame, "Upgrade Dragon Talon", yPos, Color3.fromRGB(255, 0, 100))
+
+    elseif tabIndex == 8 then -- Get Item & Upgrade
+        local toggle1, _ = CreateToggle(ContentFrame, "Auto Active Haki", "tự động kích hoạt haki", yPos, false)
+        yPos = yPos + 65
+        local toggle2, _ = CreateToggle(ContentFrame, "Auto Active V3", "tự động dùng tốc v3", yPos, false)
+        yPos = yPos + 65
+        local toggle3, _ = CreateToggle(ContentFrame, "Auto Active V4", "tự động dùng tốc v4", yPos, false)
+        yPos = yPos + 65
+        local toggle4, _ = CreateToggle(ContentFrame, "Safe Mode", "bảo vệ máu khi thấp", yPos, false)
+        yPos = yPos + 65
+        local toggle5, _ = CreateToggle(ContentFrame, "Instance Mink V3 [INF]", "bật để mink v3 vô hạn", yPos, false)
+
+    elseif tabIndex == 9 then -- Raid & Fruit
+        local dropdown1, _ = CreateDropdown(ContentFrame, "Select Chip", {"Flame", "Ice", "Quake", "Light", "Dark", "String", "Rumble", "Magma", "Human: Buddha"}, yPos)
+        yPos = yPos + 75
+        local toggle1, _ = CreateToggle(ContentFrame, "Buy Chip With Fruit", "dùng trái cây thấp nhất để mua chip", yPos, false)
+        yPos = yPos + 65
+        local toggle2, _ = CreateToggle(ContentFrame, "Auto Start Raid", "tự động bắt đầu raid", yPos, false)
+        yPos = yPos + 65
+        local toggle3, _ = CreateToggle(ContentFrame, "Auto Complete Raid", "tự động hoàn thành raid", yPos, false)
+        yPos = yPos + 65
+        local toggle4, _ = CreateToggle(ContentFrame, "Auto Awakening", "tự động thức tỉnh", yPos, false)
+        yPos = yPos + 65
+        local toggle5, _ = CreateToggle(ContentFrame, "Auto Random Fruit", "tự động random trái", yPos, false)
+        yPos = yPos + 65
+        local toggle6, _ = CreateToggle(ContentFrame, "Auto Store Fruit", "tự động cất trái vào kho", yPos, false)
+        yPos = yPos + 65
+        local toggle7, _ = CreateToggle(ContentFrame, "Auto Tween to Fruit", "tự động di chuyển đến trái", yPos, false)
+        yPos = yPos + 65
+        local toggle8, _ = CreateToggle(ContentFrame, "Auto 
